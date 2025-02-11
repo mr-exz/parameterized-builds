@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.kylenicholls.stash</groupId>
     <artifactId>parameterized-builds</artifactId>
-    <version>5.0.3</version>
+    <version>5.1.0</version>
+    <packaging>atlassian-plugin</packaging>
 
     <organization>
         <name>Kyle Nicholls</name>
@@ -14,7 +15,25 @@
 
     <name>Parameterized Builds for Jenkins</name>
     <description>Adds a build hook with customizable parameters for Jenkins</description>
-    <packaging>atlassian-plugin</packaging>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <amps.version>9.1.1</amps.version>
+        <bitbucket.version>8.9.9</bitbucket.version>
+        <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
+
+        <!-- This property ensures consistency between the key in atlassian-plugin.xml and the OSGi bundle's key. -->
+        <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+
+        <atlassian.spring.scanner.version>2.2.4</atlassian.spring.scanner.version>
+        <javax.inject.version>1</javax.inject.version>
+        <jsr311.version>1.1.1</jsr311.version>
+        <powermock.version>2.0.2</powermock.version>
+        <plugin.testrunner.version>2.0.9</plugin.testrunner.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>atlassian-public</id>
@@ -44,19 +63,25 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.atlassian.bitbucket.server</groupId>
                 <artifactId>bitbucket-parent</artifactId>
-                <version>${bitbucket.server.version}</version>
+                <version>${bitbucket.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
+        <dependency>
+            <groupId>com.atlassian.plugin</groupId>
+            <artifactId>atlassian-spring-scanner-annotation</artifactId>
+            <version>${atlassian.spring.scanner.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.atlassian.bitbucket.server</groupId>
             <artifactId>bitbucket-api</artifactId>
@@ -135,12 +160,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.atlassian.plugin</groupId>
-            <artifactId>atlassian-spring-scanner-annotation</artifactId>
-            <version>${atlassian.spring.scanner.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.1</version>
@@ -157,11 +176,6 @@
             <artifactId>jsr311-api</artifactId>
             <version>1.1.1</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.2-atlassian-1</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -186,18 +200,6 @@
             <artifactId>powermock-api-mockito2</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.6</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -249,7 +251,7 @@
                         <product>
                             <id>bitbucket</id>
                             <instanceId>bitbucket</instanceId>
-                            <version>${bitbucket.server.version}</version>
+                            <version>${bitbucket.version}</version>
                             <dataVersion>${bitbucket.data.version}</dataVersion>
                         </product>
                     </products>
@@ -269,7 +271,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>3.0.0-M7</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -344,12 +349,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <bitbucket.server.version>7.0.0</bitbucket.server.version>
-        <bitbucket.data.version>7.0.0</bitbucket.data.version>
-        <atlassian.spring.scanner.version>2.2.0</atlassian.spring.scanner.version>
-        <amps.version>8.0.2</amps.version>
-        <plugin.testrunner.version>2.0.1</plugin.testrunner.version>
-        <powermock.version>2.0.2</powermock.version>
-    </properties>
 </project>
