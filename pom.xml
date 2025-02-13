@@ -9,8 +9,8 @@
     <packaging>atlassian-plugin</packaging>
 
     <organization>
-        <name>Kyle Nicholls</name>
-        <url></url>
+        <name>mr-exz</name>
+        <url>https://github.com/mr-exz/parameterized-builds</url>
     </organization>
 
     <name>Parameterized Builds for Jenkins</name>
