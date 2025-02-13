@@ -88,7 +88,7 @@ public class ParameterizedBuildHook
     public void validate(Settings settings, SettingsValidationErrors errors, Scope scope) {
         String projectKey = scope.accept(new ScopeProjectVisitor()).getKey();
         List<Server> servers = jenkins.getJenkinsServers(projectKey);
-        servers.addAll(jenkins.getJenkinsServers(null));
+        servers.addAll(jenkins.getGlobalServers());
         boolean serverExists = servers.stream()
                 .anyMatch(server -> !server.getBaseUrl().isEmpty());
 

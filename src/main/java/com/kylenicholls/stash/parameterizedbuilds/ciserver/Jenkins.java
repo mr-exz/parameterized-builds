@@ -3,6 +3,7 @@ package com.kylenicholls.stash.parameterizedbuilds.ciserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -36,12 +37,16 @@ public class Jenkins {
      */
     public void saveJenkinsServer(@Nullable Server server, String projectKey) {
         if (projectKey == null || projectKey == ""){
-            saveJenkinsServerToDB(JENKINS_SETTINGS, server);
+            saveJenkinsServerToDB(JENKINS_SETTINGS + ".global-settings." + server.getAlias(),
+                                    server);
         } else {
             saveJenkinsServerToDB(JENKINS_SETTINGS_PROJECT + projectKey, server);
         }
     }
 
+    public List<String> listAllKeys() {
+        return getStoredKeys();
+    }
     /**
      * Saves or removes a Jenkins server depending on the url parameter. If the
      * url parameter is null then the Jenkins server will be removed.
@@ -55,9 +60,37 @@ public class Jenkins {
     private void saveJenkinsServerToDB(String key, @Nullable Server server) {
         if (server != null) {
             pluginSettings.put(key, server.asMap());
+            saveKey(key);
         } else {
             pluginSettings.remove(key);
+            removeKey(key);
         }
+    }
+
+    private void saveKey(String key) {
+        List<String> keys = getStoredKeys();
+        if (!keys.contains(key)) {
+            keys.add(key);
+            pluginSettings.put(PLUGIN_KEY + ".keys", keys);
+        }
+    }
+
+    private void removeKey(String key) {
+        List<String> keys = getStoredKeys();
+        if (keys.contains(key)) {
+            keys.remove(key);
+            pluginSettings.put(PLUGIN_KEY + ".keys", keys);
+        }
+    }
+
+    private List<String> getStoredKeys() {
+        Object keysObj = pluginSettings.get(PLUGIN_KEY + ".keys");
+        if (keysObj instanceof List) {
+            @SuppressWarnings("unchecked")
+            List<String> keys = (List<String>) keysObj;
+            return keys;
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -106,6 +139,28 @@ public class Jenkins {
         return null;
     }
 
+    public List<Server> getGlobalServers() {
+        String pattern = JENKINS_SETTINGS + ".global-settings.*";
+        return getServersByWildcard(pattern);
+    }
+
+    public List<Server> getServersByWildcard(String pattern) {
+        List<Server> matchedServers = new ArrayList<>();
+        Pattern regexPattern = Pattern.compile(pattern.replace("*", ".*"));
+
+        for (String key : listAllKeys()) {
+            if (regexPattern.matcher(key).matches()) {
+                Object settingObj = pluginSettings.get(key);
+                if (settingObj instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> settingMap = (Map<String, Object>) settingObj;
+                    matchedServers.add(new Server(settingMap));
+                }
+            }
+        }
+        return matchedServers;
+    }
+
     /**
      * Returns a Jenkins server for a project.
      *
@@ -144,6 +199,16 @@ public class Jenkins {
             server.setAltUrl(false);
         }
         return server;
+    }
+
+    public Server getServerByAlias(String alias) {
+        List<Server> allServers = getGlobalServers();
+        for (Server server : allServers) {
+            if (server.getAlias().equals(alias)) {
+                return server;
+            }
+        }
+        return null; // Return null if no server with the given alias is found
     }
 
     /**

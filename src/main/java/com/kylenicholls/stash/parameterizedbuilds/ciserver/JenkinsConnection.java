@@ -56,9 +56,10 @@ public class JenkinsConnection {
     public JenkinsResponse triggerJob(String projectKey, ApplicationUser user, Job job, 
                                       BitbucketVariables bitbucketVariables) {
         Server jenkinsServer;
+        logger.warn("PEPEGA HERE");
         if (job.getJenkinsServer() != null){
-            jenkinsServer = jenkins.getJenkinsServer(job.getJenkinsServer(),
-                    job.getJenkinsServer(), user);
+            logger.warn(job.getJenkinsServer());
+            jenkinsServer = jenkins.getServerByAlias(job.getJenkinsServer());
         } else {
             // legacy behaviour
             Server projectServer = jenkins.getJenkinsServer(projectKey, null, user);
