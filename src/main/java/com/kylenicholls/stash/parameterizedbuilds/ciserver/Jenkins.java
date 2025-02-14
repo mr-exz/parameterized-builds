@@ -44,6 +44,15 @@ public class Jenkins {
         }
     }
 
+    public void deleteJenkinsServer(@Nullable Server server, String projectKey) {
+        if (projectKey == null || projectKey == ""){
+            saveJenkinsServerToDB(JENKINS_SETTINGS + ".global-settings." + server.getAlias(),
+                    null);
+        } else {
+            saveJenkinsServerToDB(JENKINS_SETTINGS_PROJECT + projectKey, null);
+        }
+    }
+
     public List<String> listAllKeys() {
         return getStoredKeys();
     }
@@ -204,13 +213,28 @@ public class Jenkins {
     public Server getServerByAlias(String alias) {
         List<Server> allServers = getGlobalServers();
         for (Server server : allServers) {
-            if (server.getAlias().equals(alias)) {
-                return server;
+            if (server != null) {
+                if (server.getAlias().equals(alias)) {
+                    return server;
+                }
             }
         }
         return null; // Return null if no server with the given alias is found
     }
 
+    public void deleteGlobalServerByAlias(String alias) {
+        Server server = getServerByAlias(alias);
+        if (server != null) {
+            deleteJenkinsServer(server, "");
+        }
+    }
+
+    public void deleteProjectServerByAlias(String alias, String projectKey) {
+        Server server = getJenkinsServer(projectKey, alias);
+        if (server != null) {
+            saveJenkinsServer(null, projectKey);
+        }
+    }
     /**
      * Returns all Jenkins servers for a project.
      *

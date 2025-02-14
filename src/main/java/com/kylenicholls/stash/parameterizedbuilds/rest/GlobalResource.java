@@ -111,11 +111,13 @@ public class GlobalResource extends RestResource implements ServerService{
         }
     }
 
+    @Override
     @DELETE
     @Path("/servers/{serverAlias}")
-    public Response removeServer(@Context UriInfo ui){
+    public Response removeServer(@Context UriInfo ui,
+                                 @PathParam("serverAlias") String serverAlias){
         if (authContext.isAuthenticated()) {
-            jenkins.saveJenkinsServer(null, null);
+            jenkins.deleteGlobalServerByAlias(serverAlias);
             return Response.status(Response.Status.NO_CONTENT).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).build();

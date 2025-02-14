@@ -61,7 +61,7 @@ public interface ServerService {
 
     @DELETE
     @Path("/servers/{serverAlias}")
-    public Response removeServer(@Context UriInfo ui);
+    public Response removeServer(@Context UriInfo ui, @PathParam("serverAlias") String serverAlias);
 
     @PUT
     @Path("/servers/{serverAlias}/userToken")
