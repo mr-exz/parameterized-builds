@@ -1,4 +1,3 @@
-> :warning: **Notice of Deprecation**: Parameterized Builds for Jenkins is now deprecated. No new feature development will be done and users are encouraged to seek other alternatives to trigger their Jenkins jobs.
 
 ## Welcome to the Jenkins Parameterized Build Plug-in
 [![Build Status](https://travis-ci.org/ParameterizedBuilds/parameterized-builds.svg?branch=master)](https://travis-ci.org/ParameterizedBuilds/parameterized-builds)
