@@ -122,7 +122,7 @@ public class BuildResource extends RestResource {
     public Response getJenkinsServers(@Context final Repository repository){
         if (authContext.isAuthenticated()) {
             String projectKey = repository.getProject().getKey();
-            List<Map<String, String>> servers = jenkins.getJenkinsServers(null).stream()
+            List<Map<String, String>> servers = jenkins.getGlobalServers().stream()
                     .map(x -> createServerMap(x, null))
                     .collect(Collectors.toList());
 

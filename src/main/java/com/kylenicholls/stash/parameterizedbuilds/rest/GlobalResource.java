@@ -51,7 +51,7 @@ public class GlobalResource extends RestResource implements ServerService{
     @Produces({ RestUtils.APPLICATION_JSON_UTF8 })
     public Response getServers(@Context UriInfo ui){
         if (authContext.isAuthenticated()) {
-            List<Map<String, Object>> servers = jenkins.getJenkinsServers(null).stream()
+            List<Map<String, Object>> servers = jenkins.getGlobalServers().stream()
                     .map(x -> createServerMap(x, null))
                     .collect(Collectors.toList());
 
@@ -67,7 +67,7 @@ public class GlobalResource extends RestResource implements ServerService{
     @Produces({ RestUtils.APPLICATION_JSON_UTF8 })
     public Response validate(@Context UriInfo ui, Server server){
         if (authContext.isAuthenticated()) {
-            Server oldServer = jenkins.getJenkinsServer(null, server.getAlias());
+            Server oldServer = jenkins.getServerByAlias(server.getAlias());
             server.setToken(getCurrentDefaultToken(oldServer, server));
 
             JenkinsConnection jenkinsConn = new JenkinsConnection(jenkins);
@@ -100,7 +100,7 @@ public class GlobalResource extends RestResource implements ServerService{
                 return Response.status(422).entity(response.toString()).build();
             }
 
-            Server oldServer = jenkins.getJenkinsServer(null, serverAlias);
+            Server oldServer = jenkins.getServerByAlias(serverAlias);
             server.setToken(getCurrentDefaultToken(oldServer, server));
 
             int returnStatus = oldServer == null ? 201 : 200;
@@ -111,11 +111,13 @@ public class GlobalResource extends RestResource implements ServerService{
         }
     }
 
+    @Override
     @DELETE
     @Path("/servers/{serverAlias}")
-    public Response removeServer(@Context UriInfo ui){
+    public Response removeServer(@Context UriInfo ui,
+                                 @PathParam("serverAlias") String serverAlias){
         if (authContext.isAuthenticated()) {
-            jenkins.saveJenkinsServer(null, null);
+            jenkins.deleteGlobalServerByAlias(serverAlias);
             return Response.status(Response.Status.NO_CONTENT).build();
         } else {
             return Response.status(Response.Status.FORBIDDEN).build();

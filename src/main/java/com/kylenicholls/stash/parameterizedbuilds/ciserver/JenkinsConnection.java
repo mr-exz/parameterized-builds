@@ -57,8 +57,15 @@ public class JenkinsConnection {
                                       BitbucketVariables bitbucketVariables) {
         Server jenkinsServer;
         if (job.getJenkinsServer() != null){
-            jenkinsServer = jenkins.getJenkinsServer(job.getJenkinsServer(),
-                    job.getJenkinsServer(), user);
+            // look for project jenkins server first and support legacy global
+            jenkinsServer = jenkins.getJenkinsServer(
+                                    job.getJenkinsServer(),
+                                    job.getJenkinsServer(), user
+            );
+            // then check on global level
+            if (jenkinsServer == null){
+                jenkinsServer = jenkins.getServerByAlias(job.getJenkinsServer());
+            }
         } else {
             // legacy behaviour
             Server projectServer = jenkins.getJenkinsServer(projectKey, null, user);

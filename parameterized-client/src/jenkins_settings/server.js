@@ -116,10 +116,12 @@ const ServerContainer = ({
                         extraClasses={["aui-button-primary"]}
                         disabled={serverData.alias.includes("/")}
                         onClick={saveServer} />
-                <Button id="testButton" name="button" buttonText="Test Jenkins Settings"
-                        onClick={testServer}/>
-                <Button id="clearButton" name="button" buttonText="Clear Jenkins Settings"
+                <Button id="testButton" name="button" buttonText="Test"
+                        onClick={testServer} />
+                <Button id="clearButton" name="button" buttonText="Clear"
                         onClick={(e) => toggleModal(e, true)} disabled={serverData.old_alias === ""} />
+                <Button id="deleteButton" name="button" buttonText="Delete"
+                        onClick={deleteServer} />
             </ButtonGroup>
             {serverData.action_message !== "" && 
                 <ActionDialog message={serverData.action_message} state={serverData.action_state}/>}

@@ -84,7 +84,7 @@ const JobContainer = ({
     serverValues.forEach(server => {
         let serverPrefix = server["alias"] || server["url"];
         let serverText = serverPrefix + " (" + server["scope"] + ")";
-        let serverValue = server["scope"] == "project" ? server["project"] : "global-settings" ;
+        let serverValue = server["scope"] === "project" ? server["project"] : serverPrefix;
         serverOptions.push(<option value={serverValue}>{serverText}</option>)
     });
 

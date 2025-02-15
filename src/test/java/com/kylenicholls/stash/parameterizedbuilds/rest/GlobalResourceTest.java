@@ -275,13 +275,15 @@ public class GlobalResourceTest {
 
     @Test
     public void testRemoveServerRemovesServer(){
-        rest.removeServer(ui);
+        String serverAlias = "testAlias";
+        rest.removeServer(ui,serverAlias);
         verify(jenkins, times(1)).saveJenkinsServer(null, null);
     }
 
     @Test
     public void testRemoveServerReturnsNoContent(){
-        Response actual = rest.removeServer(ui);
+        String serverAlias = "testAlias";
+        Response actual = rest.removeServer(ui,serverAlias);
         assertEquals(Response.Status.NO_CONTENT.getStatusCode(), actual.getStatus());
     }
 

@@ -1,7 +1,5 @@
-> :warning: **Notice of Deprecation**: Parameterized Builds for Jenkins is now deprecated. No new feature development will be done and users are encouraged to seek other alternatives to trigger their Jenkins jobs.
 
 ## Welcome to the Jenkins Parameterized Build Plug-in
-[![Build Status](https://travis-ci.org/ParameterizedBuilds/parameterized-builds.svg?branch=master)](https://travis-ci.org/ParameterizedBuilds/parameterized-builds)
 
 ## Setup
 1. [Define a server](#define-a-server)
@@ -165,4 +163,3 @@ for the given branch. Triggers still need to be selected like any other job.
 # Contributing
 * Pull requests should be opened against master
 * Write unit tests for any changes you make
-* A passing [Travis CI](https://travis-ci.org/KyleLNicholls/parameterized-builds) build is required
