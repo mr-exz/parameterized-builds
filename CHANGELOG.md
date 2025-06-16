@@ -1,3 +1,9 @@
+# 5.1.1
+
+## Fixes
+
+- Added handling of null object for anonymous users
+
 # 5.1.0
 
 ## Improvements

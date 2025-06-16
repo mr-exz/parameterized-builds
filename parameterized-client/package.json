@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/ npm-debug.log",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prod-build": "./node_modules/.bin/webpack --config webpack.config.js"
+    "prod-build": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/webpack --config webpack.config.js"
   },
   "author": "Kyle Nicholls/Austin Hacker",
   "private": true,
