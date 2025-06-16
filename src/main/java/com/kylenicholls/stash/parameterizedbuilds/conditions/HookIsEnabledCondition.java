@@ -27,7 +27,9 @@ public class HookIsEnabledCondition extends BaseCondition {
             return false;
         }
         RepositoryHook hook = settingsService.getHook(repository);
-
+        if (hook == null) {
+            return false;
+        }
         return hook.isEnabled();
     }
 }

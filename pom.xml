@@ -5,7 +5,7 @@
 
     <groupId>com.kylenicholls.stash</groupId>
     <artifactId>parameterized-builds</artifactId>
-    <version>5.1.0</version>
+    <version>5.1.1</version>
     <packaging>atlassian-plugin</packaging>
 
     <organization>
